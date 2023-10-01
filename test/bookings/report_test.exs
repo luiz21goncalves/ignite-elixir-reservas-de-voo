@@ -27,5 +27,23 @@ defmodule Flightex.Bookings.ReportTest do
 
       assert file =~ content
     end
+
+    test "when called, return the content with default filename" do
+      params = %{
+        complete_date: ~N[2001-05-07 12:00:00],
+        local_origin: "Brasilia",
+        local_destination: "Bananeiras",
+        user_id: "12345678900",
+        id: UUID.uuid4()
+      }
+
+      content = "12345678900,Brasilia,Bananeiras,2001-05-07 12:00:00"
+
+      Flightex.create_or_update_booking(params)
+      Report.generate()
+      {:ok, file} = File.read("report.csv")
+
+      assert file =~ content
+    end
   end
 end
